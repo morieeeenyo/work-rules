@@ -32,7 +32,7 @@ const columns: GridColDef[] = [
     renderCell: (params: GridRenderCellParams) => (
       <RenderExpandableCell {...params} />
     ),
-    cellClassName: 'flex content-center',
+    cellClassName: 'flex content-center cursor-pointer',
   },
 ]
 
