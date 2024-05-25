@@ -1,8 +1,14 @@
 'use client'
-import { Grid, Tooltip, Typography } from '@mui/material'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { Button, Grid, Tooltip, Typography } from '@mui/material'
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  useGridApiRef,
+} from '@mui/x-data-grid'
 import { useWorkRules } from '../hooks/useWorkRules'
 import styled from '@emotion/styled/macro'
+import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -38,6 +44,13 @@ const columns: GridColDef[] = [
 
 export default function New() {
   const { data, isLoading } = useWorkRules()
+  const { onSubmitAnswer } = useAnswerRetrospective()
+  const gridApiRef = useGridApiRef()
+  const onSubmit = async () => {
+    const selectedRows = gridApiRef.current?.getSelectedRows()
+    console.log(selectedRows)
+    await onSubmitAnswer()
+  }
   return (
     <Grid
       container
@@ -48,10 +61,17 @@ export default function New() {
       height='100%'
       spacing={4}
     >
-      <Grid item>
-        <Typography variant='h4' fontWeight='bold'>
-          回答する
-        </Typography>
+      <Grid item container justifyContent='space-between' width='960px'>
+        <Grid item>
+          <Typography variant='h4' fontWeight='bold'>
+            回答する
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button variant='contained' onClick={onSubmit}>
+            送信する
+          </Button>
+        </Grid>
       </Grid>
       <Grid item>
         <DataGrid
@@ -62,6 +82,7 @@ export default function New() {
           getRowHeight={() => 'auto'}
           autoHeight
           hideFooter
+          apiRef={gridApiRef}
         />
       </Grid>
     </Grid>
