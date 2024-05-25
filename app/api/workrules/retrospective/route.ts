@@ -31,7 +31,6 @@ export async function POST(request: Request) {
         },
       },
     })
-    // NOTE: queryのレスポンスはUnionになっているので必要な型のみにキャストしてしまう
     return NextResponse.json(response)
   } catch (err) {
     return NextResponse.json(err)
