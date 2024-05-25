@@ -49,7 +49,6 @@ export default function New() {
   const { data, isLoading } = useWorkRules()
   const { onSubmitAnswer, isMutating: isSubmittingAnswer } =
     useAnswerRetrospective()
-  const gridApiRef = useGridApiRef()
   const router = useRouter()
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
 
@@ -93,7 +92,6 @@ export default function New() {
           getRowHeight={() => 'auto'}
           autoHeight
           hideFooter
-          apiRef={gridApiRef}
           rowSelectionModel={selectedRowIds}
           onRowSelectionModelChange={(params) => {
             setSelectedRowIds(params as string[])
