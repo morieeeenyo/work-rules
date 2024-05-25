@@ -7,8 +7,8 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid'
 import { useWorkRules } from '../hooks/useWorkRules'
-import styled from '@emotion/styled/macro'
 import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
+import { useRouter } from 'next/navigation'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -46,11 +46,14 @@ export default function New() {
   const { data, isLoading } = useWorkRules()
   const { onSubmitAnswer } = useAnswerRetrospective()
   const gridApiRef = useGridApiRef()
+  const router = useRouter()
 
   const onSubmit = async () => {
     const selectedRows = gridApiRef.current?.getSelectedRows()
     const selectedRowIds = Array.from(selectedRows).map((row) => row[0])
-    await onSubmitAnswer(selectedRowIds as string[])
+    await onSubmitAnswer(selectedRowIds as string[]).then(() =>
+      router.push('/'),
+    )
   }
   return (
     <Grid
