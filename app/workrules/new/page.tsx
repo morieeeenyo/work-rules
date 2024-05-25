@@ -1,5 +1,5 @@
 'use client'
-import { Button, Grid, Tooltip, Typography } from '@mui/material'
+import { Button, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import {
   DataGrid,
   GridColDef,
@@ -9,6 +9,7 @@ import {
 import { useWorkRules } from '../hooks/useWorkRules'
 import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
 import { useRouter } from 'next/navigation'
+import { Navigation } from '@mui/icons-material'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -55,6 +56,7 @@ export default function New() {
       router.push('/'),
     )
   }
+
   return (
     <Grid
       container
@@ -88,6 +90,31 @@ export default function New() {
           hideFooter
           apiRef={gridApiRef}
         />
+      </Grid>
+      <Grid
+        item
+        container
+        margin='auto 20% 40px auto'
+        justifyContent='space-around'
+        alignItems='center'
+        width='20%'
+      >
+        <Grid item>
+          <Fab
+            variant='extended'
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+          >
+            <Navigation sx={{ mr: 1 }} />
+            ページTOPへ
+          </Fab>
+        </Grid>
+        <Grid item>
+          <Button variant='contained' onClick={onSubmit}>
+            送信する
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   )
