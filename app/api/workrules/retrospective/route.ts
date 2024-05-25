@@ -2,20 +2,13 @@ import { notionClient } from '@/lib/notionClient'
 import { NextApiRequest } from 'next'
 import { NextResponse } from 'next/server'
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-
 export async function POST(request: Request) {
   const body = await request.json()
   const { selectedRowIds } = body
   try {
     const response = await notionClient.pages.create({
       parent: {
-        database_id:
-          process.env.NOTION_WORKRULES_RETROSPECTIVE_DATABASE_ID ?? '',
+        database_id: process.env.NOTION_RETROSPECTIVE_DATABASE_ID ?? '',
       },
       properties: {
         名前: {
