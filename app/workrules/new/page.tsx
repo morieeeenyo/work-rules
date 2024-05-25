@@ -1,8 +1,17 @@
 'use client'
-import { Grid, Tooltip, Typography } from '@mui/material'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { Button, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  useGridApiRef,
+} from '@mui/x-data-grid'
 import { useWorkRules } from '../hooks/useWorkRules'
-import styled from '@emotion/styled/macro'
+import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
+import { useRouter } from 'next/navigation'
+import { Navigation } from '@mui/icons-material'
+import { useState } from 'react'
+import { LoadingButton } from '@mui/lab'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -32,12 +41,26 @@ const columns: GridColDef[] = [
     renderCell: (params: GridRenderCellParams) => (
       <RenderExpandableCell {...params} />
     ),
-    cellClassName: 'flex content-center',
+    cellClassName: 'flex content-center cursor-pointer',
   },
 ]
 
 export default function New() {
   const { data, isLoading } = useWorkRules()
+  const { onSubmitAnswer, isMutating: isSubmittingAnswer } =
+    useAnswerRetrospective()
+  const router = useRouter()
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
+
+  const onSubmit = async () => {
+    const unselectedRowIds = data
+      .filter((row) => !selectedRowIds.includes(row.id))
+      .map((row) => row.id)
+    await onSubmitAnswer({
+      unselectedRowIds,
+    }).then(() => router.push('/'))
+  }
+
   return (
     <Grid
       container
@@ -48,10 +71,22 @@ export default function New() {
       height='100%'
       spacing={4}
     >
-      <Grid item>
-        <Typography variant='h4' fontWeight='bold'>
-          回答する
-        </Typography>
+      <Grid item container justifyContent='space-between' width='960px'>
+        <Grid item>
+          <Typography variant='h4' fontWeight='bold'>
+            回答する
+          </Typography>
+        </Grid>
+        <Grid item>
+          <LoadingButton
+            variant='contained'
+            onClick={onSubmit}
+            disabled={selectedRowIds.length === 0}
+            loading={isSubmittingAnswer}
+          >
+            送信する
+          </LoadingButton>
+        </Grid>
       </Grid>
       <Grid item>
         <DataGrid
@@ -62,7 +97,43 @@ export default function New() {
           getRowHeight={() => 'auto'}
           autoHeight
           hideFooter
+          rowSelectionModel={selectedRowIds}
+          onRowSelectionModelChange={(selectedRowIds) => {
+            setSelectedRowIds(selectedRowIds as string[])
+          }}
+          disableRowSelectionOnClick={isSubmittingAnswer}
         />
+      </Grid>
+      <Grid
+        item
+        container
+        justifyContent='end'
+        alignItems='center'
+        width='960px'
+        position='fixed'
+        bottom={20}
+      >
+        <Grid item pr='2rem'>
+          <Fab
+            variant='extended'
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+          >
+            <Navigation sx={{ mr: 1 }} />
+            ページTOPへ
+          </Fab>
+        </Grid>
+        <Grid item>
+          <LoadingButton
+            variant='contained'
+            onClick={onSubmit}
+            disabled={selectedRowIds.length === 0}
+            loading={isSubmittingAnswer}
+          >
+            送信する
+          </LoadingButton>
+        </Grid>
       </Grid>
     </Grid>
   )
