@@ -46,10 +46,11 @@ export default function New() {
   const { data, isLoading } = useWorkRules()
   const { onSubmitAnswer } = useAnswerRetrospective()
   const gridApiRef = useGridApiRef()
+
   const onSubmit = async () => {
     const selectedRows = gridApiRef.current?.getSelectedRows()
-    console.log(selectedRows)
-    await onSubmitAnswer()
+    const selectedRowIds = Array.from(selectedRows).map((row) => row[0])
+    await onSubmitAnswer(selectedRowIds as string[])
   }
   return (
     <Grid
