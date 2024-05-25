@@ -53,7 +53,12 @@ export default function New() {
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
 
   const onSubmit = async () => {
-    await onSubmitAnswer(selectedRowIds).then(() => router.push('/'))
+    const unselectedRowIds = data
+      .filter((row) => !selectedRowIds.includes(row.id))
+      .map((row) => row.id)
+    await onSubmitAnswer({
+      unselectedRowIds,
+    }).then(() => router.push('/'))
   }
 
   return (
@@ -93,8 +98,8 @@ export default function New() {
           autoHeight
           hideFooter
           rowSelectionModel={selectedRowIds}
-          onRowSelectionModelChange={(params) => {
-            setSelectedRowIds(params as string[])
+          onRowSelectionModelChange={(selectedRowIds) => {
+            setSelectedRowIds(selectedRowIds as string[])
           }}
           disableRowSelectionOnClick={isSubmittingAnswer}
         />

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { selectedRowIds } = body
+  const { unselectedRowIds } = body
   try {
     const response = await notionClient.pages.create({
       parent: {
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
         },
         体現できなかったワークルール: {
           type: 'relation',
-          relation: selectedRowIds.map((id: string) => ({ id })),
+          relation: unselectedRowIds.map((id: string) => ({ id })),
         },
       },
     })
