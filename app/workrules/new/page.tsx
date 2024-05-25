@@ -11,6 +11,7 @@ import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
 import { useRouter } from 'next/navigation'
 import { Navigation } from '@mui/icons-material'
 import { useState } from 'react'
+import { LoadingButton } from '@mui/lab'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -46,7 +47,8 @@ const columns: GridColDef[] = [
 
 export default function New() {
   const { data, isLoading } = useWorkRules()
-  const { onSubmitAnswer } = useAnswerRetrospective()
+  const { onSubmitAnswer, isMutating: isSubmittingAnswer } =
+    useAnswerRetrospective()
   const gridApiRef = useGridApiRef()
   const router = useRouter()
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
@@ -72,13 +74,14 @@ export default function New() {
           </Typography>
         </Grid>
         <Grid item>
-          <Button
+          <LoadingButton
             variant='contained'
             onClick={onSubmit}
             disabled={selectedRowIds.length === 0}
+            loading={isSubmittingAnswer}
           >
             送信する
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
       <Grid item>
@@ -95,6 +98,7 @@ export default function New() {
           onRowSelectionModelChange={(params) => {
             setSelectedRowIds(params as string[])
           }}
+          disableRowSelectionOnClick={isSubmittingAnswer}
         />
       </Grid>
       <Grid
@@ -118,13 +122,14 @@ export default function New() {
           </Fab>
         </Grid>
         <Grid item>
-          <Button
+          <LoadingButton
             variant='contained'
             onClick={onSubmit}
             disabled={selectedRowIds.length === 0}
+            loading={isSubmittingAnswer}
           >
             送信する
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
     </Grid>

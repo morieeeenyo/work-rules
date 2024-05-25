@@ -1,15 +1,19 @@
 import axios from 'axios'
+import { Arguments } from 'swr'
+import useSWRMutation from 'swr/mutation'
 
 export const useAnswerRetrospective = () => {
-  const onSubmitAnswer = async (selectedRowIds: string[]) => {
-    const response = await axios.post('/api/workrules/retrospective', {
-      selectedRowIds,
-    })
+  const { trigger: onSubmitAnswer, isMutating } = useSWRMutation(
+    '/api/workrules/retrospective',
+    (url: string, { arg }: { arg: Arguments }) => {
+      const response = axios.post(url, arg)
 
-    return response
-  }
+      return response
+    },
+  )
 
   return {
     onSubmitAnswer,
+    isMutating,
   }
 }
