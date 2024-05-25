@@ -15,7 +15,7 @@ export async function POST(request: Request) {
           title: [
             {
               text: {
-                content: 'Test',
+                content: new Date().toLocaleDateString('ja-JP'),
               },
             },
           ],
