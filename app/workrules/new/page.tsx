@@ -10,6 +10,7 @@ import { useWorkRules } from '../hooks/useWorkRules'
 import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
 import { useRouter } from 'next/navigation'
 import { Navigation } from '@mui/icons-material'
+import { useState } from 'react'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -48,13 +49,10 @@ export default function New() {
   const { onSubmitAnswer } = useAnswerRetrospective()
   const gridApiRef = useGridApiRef()
   const router = useRouter()
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
 
   const onSubmit = async () => {
-    const selectedRows = gridApiRef.current?.getSelectedRows()
-    const selectedRowIds = Array.from(selectedRows).map((row) => row[0])
-    await onSubmitAnswer(selectedRowIds as string[]).then(() =>
-      router.push('/'),
-    )
+    await onSubmitAnswer(selectedRowIds).then(() => router.push('/'))
   }
 
   return (
@@ -74,7 +72,11 @@ export default function New() {
           </Typography>
         </Grid>
         <Grid item>
-          <Button variant='contained' onClick={onSubmit}>
+          <Button
+            variant='contained'
+            onClick={onSubmit}
+            disabled={selectedRowIds.length === 0}
+          >
             送信する
           </Button>
         </Grid>
@@ -89,17 +91,22 @@ export default function New() {
           autoHeight
           hideFooter
           apiRef={gridApiRef}
+          rowSelectionModel={selectedRowIds}
+          onRowSelectionModelChange={(params) => {
+            setSelectedRowIds(params as string[])
+          }}
         />
       </Grid>
       <Grid
         item
         container
-        margin='auto 20% 40px auto'
-        justifyContent='space-around'
+        justifyContent='end'
         alignItems='center'
-        width='20%'
+        width='960px'
+        position='fixed'
+        bottom={20}
       >
-        <Grid item>
+        <Grid item pr='2rem'>
           <Fab
             variant='extended'
             onClick={() => {
@@ -111,7 +118,11 @@ export default function New() {
           </Fab>
         </Grid>
         <Grid item>
-          <Button variant='contained' onClick={onSubmit}>
+          <Button
+            variant='contained'
+            onClick={onSubmit}
+            disabled={selectedRowIds.length === 0}
+          >
             送信する
           </Button>
         </Grid>
