@@ -3,6 +3,9 @@
 import { NextResponse, NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
+  if (process.env.NODE_ENV === 'development') {
+    return NextResponse.next()
+  }
   const authHeader = request.headers.get('authorization')
   const username = process.env.BASIC_AUTH_USERNAME
   const password = process.env.BASIC_AUTH_PASSWORD
