@@ -4,7 +4,9 @@ import { NextResponse, NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   if (process.env.NODE_ENV === 'development') {
-    return NextResponse.next()
+    if (process.env.ENABLE_BASIC_AUTH !== '1') {
+      return NextResponse.next()
+    }
   }
   const authHeader = request.headers.get('authorization')
   const username = process.env.BASIC_AUTH_USERNAME
