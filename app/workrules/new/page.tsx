@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import { Navigation } from '@mui/icons-material'
 import { useState } from 'react'
 import { LoadingButton } from '@mui/lab'
+import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -51,6 +52,7 @@ export default function New() {
     useAnswerRetrospective()
   const router = useRouter()
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
+  const { showSnackbar } = useSnackbarContext()
 
   const onSubmit = async () => {
     const unselectedRowIds = data
@@ -58,7 +60,14 @@ export default function New() {
       .map((row) => row.id)
     await onSubmitAnswer({
       unselectedRowIds,
-    }).then(() => router.push('/'))
+    })
+      .then(() => {
+        showSnackbar?.('success', '回答を送信しました')
+        router.push('/')
+      })
+      .catch(() => {
+        showSnackbar?.('error', '回答の送信に失敗しました')
+      })
   }
 
   return (
