@@ -33,6 +33,6 @@ export async function POST(request: Request) {
     })
     return NextResponse.json(response)
   } catch (err) {
-    return NextResponse.json(err)
+    throw NextResponse.json(err)
   }
 }
