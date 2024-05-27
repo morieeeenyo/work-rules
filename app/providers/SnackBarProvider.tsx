@@ -6,7 +6,6 @@ import Alert from '@mui/material/Alert'
 type SnackbarSeverity = 'error' | 'warning' | 'info' | 'success'
 
 interface ISnackbarContext {
-  //snackbarを表示するときに呼び出す関数
   showSnackbar: ((type: SnackbarSeverity, message: string) => void) | undefined
 }
 
@@ -23,19 +22,16 @@ type Props = {
 }
 
 export const SnackbarProvider: FC<Props> = ({ children }) => {
-  //Snackbarに与えるパラメータをstateで管理
   const [open, setOpen] = useState<boolean>(false)
   const [severity, setSeverity] = useState<SnackbarSeverity>('info')
   const [message, setMessage] = useState<string>('')
 
-  //showSnackbarの実体。各stateをセットし、snackbarを表示する
   const showSnackbar = (type: SnackbarSeverity, message: string): void => {
     setOpen(true)
     setSeverity(type)
     setMessage(message)
   }
 
-  //snackbarのxボタンが押された時のコールバック関数
   const handleClose = (
     event: React.SyntheticEvent | Event,
     reason?: string,
