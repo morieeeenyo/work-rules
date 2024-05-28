@@ -44,6 +44,11 @@ const columns: GridColDef[] = [
     ),
     cellClassName: 'flex content-center cursor-pointer',
   },
+  {
+    field: 'type',
+    headerName: '種別',
+    cellClassName: 'flex content-center cursor-pointer',
+  },
 ]
 
 export default function New() {
