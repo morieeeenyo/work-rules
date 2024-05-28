@@ -22,15 +22,15 @@ export const useWorkRules = () => {
         const properties = page.properties as PageObjectResponse['properties']
 
         const titlePropery = properties['ルール']
-        const typePropery = properties['種別']
+        const categoryPropery = properties['種別']
 
         const title = getPageTitle(titlePropery)
-        const type = getSelectedValue(typePropery)
+        const category = getSelectedValue(categoryPropery)
 
         return {
           id: page.id,
           title: title ?? '',
-          type: type as WorkRule['type'],
+          category: category as WorkRule['category'],
         }
       })
 

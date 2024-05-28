@@ -13,7 +13,7 @@ import { Navigation } from '@mui/icons-material'
 import { useState } from 'react'
 import { LoadingButton } from '@mui/lab'
 import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
-import { COLOR_WITH_TYPE } from '../constants/color'
+import { COLOR_WITH_CATEGORY } from '../constants/color'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -46,7 +46,7 @@ const columns: GridColDef[] = [
     cellClassName: 'flex content-center cursor-pointer',
   },
   {
-    field: 'type',
+    field: 'category',
     headerName: '種別',
     width: 130,
     align: 'center',
@@ -59,7 +59,9 @@ const columns: GridColDef[] = [
             width: 'fit-content',
             lineHeight: '1',
             backgroundColor:
-              COLOR_WITH_TYPE[params.value as keyof typeof COLOR_WITH_TYPE],
+              COLOR_WITH_CATEGORY[
+                params.value as keyof typeof COLOR_WITH_CATEGORY
+              ],
           }}
         />
       ) : null,
