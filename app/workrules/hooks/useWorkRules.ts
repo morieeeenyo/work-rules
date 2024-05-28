@@ -8,7 +8,7 @@ import {
 import axios from 'axios'
 import { NextResponse } from 'next/server'
 import useSWR from 'swr'
-import { WorkRule } from './type'
+import { WorkRule } from '../types'
 import { getPageTitle, getSelectedValue } from '@/app/utils/notion'
 
 export const useWorkRules = () => {
