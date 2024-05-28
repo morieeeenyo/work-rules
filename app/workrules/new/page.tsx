@@ -51,17 +51,18 @@ const columns: GridColDef[] = [
     width: 130,
     align: 'center',
     headerAlign: 'center',
-    renderCell: (params: GridRenderCellParams) => (
-      <Chip
-        label={params.value}
-        style={{
-          width: 'fit-content',
-          lineHeight: '1',
-          backgroundColor:
-            COLOR_WITH_TYPE[params.value as keyof typeof COLOR_WITH_TYPE],
-        }}
-      />
-    ),
+    renderCell: (params: GridRenderCellParams) =>
+      params.value ? (
+        <Chip
+          label={params.value}
+          style={{
+            width: 'fit-content',
+            lineHeight: '1',
+            backgroundColor:
+              COLOR_WITH_TYPE[params.value as keyof typeof COLOR_WITH_TYPE],
+          }}
+        />
+      ) : null,
     cellClassName: 'flex flex-col items-center justify-center cursor-pointer',
   },
 ]
