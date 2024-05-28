@@ -3,41 +3,38 @@ import {
   DatabaseObjectResponse,
   PageObjectResponse,
   QueryDatabaseResponse,
+  SelectPropertyItemObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints'
 import axios from 'axios'
 import { NextResponse } from 'next/server'
 import useSWR from 'swr'
-import { TitleProperty, WorkRule } from './type'
+import { WorkRule } from './type'
+import { getPageTitle, getSelectedValue } from '@/app/utils/notion'
 
 export const useWorkRules = () => {
   const { data, isLoading } = useSWR<WorkRule[]>(
     '/api/workrules',
     async (url: string) => {
-      const response = await axios.get<DatabaseObjectResponse[]>(url)
+      const response = await axios.get<QueryDatabaseResponse>(url)
 
-      return response.data.map((page) => {
-        const properties = page.properties
+      const convertedResponse = response.data.results.map((page) => {
+        if (!('properties' in page)) return null
+        const properties = page.properties as PageObjectResponse['properties']
 
-        const titleProperyName =
-          Object.keys(properties).find(
-            (key) => properties[key].type === 'title',
-          ) ?? ''
+        const titlePropery = properties['ルール']
+        const typePropery = properties['種別']
 
-        const titlePropery = properties[titleProperyName]
-
-        // TODO: Linkを取り出すにはもうちょい頑張る必要がある
-        const title =
-          titlePropery.type === 'title'
-            ? (titlePropery.title as unknown as TitleProperty[])
-                .map((text) => (text.type === 'text' ? text.text.content : ''))
-                .join('')
-            : ''
+        const title = getPageTitle(titlePropery)
+        const type = getSelectedValue(typePropery)
 
         return {
           id: page.id,
-          title,
+          title: title ?? '',
+          type: type as WorkRule['type'],
         }
       })
+
+      return convertedResponse.filter((page) => page !== null) as WorkRule[]
     },
   )
 
