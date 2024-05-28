@@ -17,8 +17,9 @@ export async function GET(request: Request) {
         },
       ],
     })
+
     // NOTE: queryのレスポンスはUnionになっているので必要な型のみにキャストしてしまう
-    return NextResponse.json(response.results as DatabaseObjectResponse[])
+    return NextResponse.json(response)
   } catch (err) {
     return NextResponse.json(err)
   }
