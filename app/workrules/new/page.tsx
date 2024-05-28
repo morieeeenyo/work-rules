@@ -13,6 +13,7 @@ import { Navigation } from '@mui/icons-material'
 import { useState } from 'react'
 import { LoadingButton } from '@mui/lab'
 import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
+import { COLOR_WITH_TYPE } from '../constants/color'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -55,9 +56,9 @@ const columns: GridColDef[] = [
         label={params.value}
         style={{
           width: 'fit-content',
-          textAlign: 'center',
-          height: '32px',
           lineHeight: '1',
+          backgroundColor:
+            COLOR_WITH_TYPE[params.value as keyof typeof COLOR_WITH_TYPE],
         }}
       />
     ),
