@@ -1,5 +1,5 @@
 'use client'
-import { Button, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import { Button, Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import {
   DataGrid,
   GridColDef,
@@ -47,7 +47,21 @@ const columns: GridColDef[] = [
   {
     field: 'type',
     headerName: '種別',
-    cellClassName: 'flex content-center cursor-pointer',
+    width: 130,
+    align: 'center',
+    headerAlign: 'center',
+    renderCell: (params: GridRenderCellParams) => (
+      <Chip
+        label={params.value}
+        style={{
+          width: 'fit-content',
+          textAlign: 'center',
+          height: '32px',
+          lineHeight: '1',
+        }}
+      />
+    ),
+    cellClassName: 'flex flex-col items-center justify-center cursor-pointer',
   },
 ]
 
@@ -116,6 +130,7 @@ export default function New() {
             setSelectedRowIds(selectedRowIds as string[])
           }}
           disableRowSelectionOnClick={isSubmittingAnswer}
+          disableColumnMenu
         />
       </Grid>
       <Grid
