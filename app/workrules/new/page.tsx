@@ -1,5 +1,5 @@
 'use client'
-import { Button, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import { Button, Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import {
   DataGrid,
   GridColDef,
@@ -13,6 +13,7 @@ import { Navigation } from '@mui/icons-material'
 import { useState } from 'react'
 import { LoadingButton } from '@mui/lab'
 import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
+import { COLOR_WITH_CATEGORY } from '../constants/color'
 
 const RenderExpandableCell = (props: GridRenderCellParams) => {
   const { value } = props
@@ -43,6 +44,28 @@ const columns: GridColDef[] = [
       <RenderExpandableCell {...params} />
     ),
     cellClassName: 'flex content-center cursor-pointer',
+  },
+  {
+    field: 'category',
+    headerName: '種別',
+    width: 130,
+    align: 'center',
+    headerAlign: 'center',
+    renderCell: (params: GridRenderCellParams) =>
+      params.value ? (
+        <Chip
+          label={params.value}
+          style={{
+            width: 'fit-content',
+            lineHeight: '1',
+            backgroundColor:
+              COLOR_WITH_CATEGORY[
+                params.value as keyof typeof COLOR_WITH_CATEGORY
+              ],
+          }}
+        />
+      ) : null,
+    cellClassName: 'flex flex-col items-center justify-center cursor-pointer',
   },
 ]
 
@@ -111,6 +134,7 @@ export default function New() {
             setSelectedRowIds(selectedRowIds as string[])
           }}
           disableRowSelectionOnClick={isSubmittingAnswer}
+          disableColumnMenu
         />
       </Grid>
       <Grid
