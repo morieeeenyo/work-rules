@@ -78,11 +78,10 @@ export default function New() {
   const { showSnackbar } = useSnackbarContext()
 
   const onSubmit = async () => {
-    const unselectedRowIds = data
+    const unselectedRows = data
       .filter((row) => !selectedRowIds.includes(row.id))
-      .map((row) => row.id)
     await onSubmitAnswer({
-      unselectedRowIds,
+      unselectedRows,
     })
       .then(() => {
         showSnackbar?.('success', '回答を送信しました')

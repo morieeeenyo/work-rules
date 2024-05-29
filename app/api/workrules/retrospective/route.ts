@@ -1,9 +1,10 @@
+import { WorkRule } from '@/app/workrules/types'
 import { notionClient } from '@/lib/notionClient'
 import { slack } from '@/lib/slack'
 import { NextApiRequest } from 'next'
 import { NextResponse } from 'next/server'
 
-const generateSlackMessage = (message: string) => {
+const generateSlackMessage = (unselectedRows: WorkRule[]) => {
   const header = {
     type: 'header',
     text: {
@@ -36,25 +37,20 @@ const generateSlackMessage = (message: string) => {
         {
           type: 'rich_text_list',
           style: 'bullet',
-          elements: [
-            {
-              type: 'rich_text_section',
-              elements: [
-                {
-                  type: 'text',
-                  text: 'item 1: ',
-                },
-                {
-                  type: 'emoji',
-                  name: 'basketball',
-                },
-              ],
-            },
-          ],
+          elements: unselectedRows.map((row: WorkRule) => ({
+            type: 'rich_text_section',
+            elements: [
+              {
+                type: 'text',
+                text: `${row.title}`,
+              },
+            ],
+          })),
         },
       ],
     },
   ]
+  // TODO: ボタンのリンク先を変更する
   const actionsButtons = [
     {
       type: 'section',
@@ -90,6 +86,7 @@ const generateSlackMessage = (message: string) => {
         value: 'click_me_123',
         url: 'https://google.com',
         action_id: 'button-action',
+        style: 'primary',
       },
     },
   ]
@@ -100,7 +97,7 @@ const generateSlackMessage = (message: string) => {
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { unselectedRowIds } = body
+  const { unselectedRows }: { unselectedRows: WorkRule[] } = body
   try {
     const response = await notionClient.pages.create({
       parent: {
@@ -123,11 +120,11 @@ export async function POST(request: Request) {
         },
         体現できなかったワークルール: {
           type: 'relation',
-          relation: unselectedRowIds.map((id: string) => ({ id })),
+          relation: unselectedRows.map((row: WorkRule) => ({ id: row.id })),
         },
       },
     })
-    const message = generateSlackMessage('hogefuga')
+    const message = generateSlackMessage(unselectedRows)
     await slack.sendMessage(message)
     return NextResponse.json(response)
   } catch (err) {
