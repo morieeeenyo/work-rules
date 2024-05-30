@@ -1,8 +1,9 @@
-import { WorkRule } from '@/app/workrules/types'
+import { NextResponse } from 'next/server'
+
 import { notionClient } from '@/lib/notionClient'
 import { slack } from '@/lib/slack'
-import { NextApiRequest } from 'next'
-import { NextResponse } from 'next/server'
+
+import type { WorkRule } from '@/app/workrules/types'
 
 const generateSlackMessage = (unselectedRows: WorkRule[]) => {
   const header = {

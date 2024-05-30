@@ -1,21 +1,22 @@
 'use client'
-import { Button, Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  useGridApiRef,
-} from '@mui/x-data-grid'
-import { useWorkRules } from '../hooks/useWorkRules'
-import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
-import { useRouter } from 'next/navigation'
-import { Navigation } from '@mui/icons-material'
-import { useState } from 'react'
-import { LoadingButton } from '@mui/lab'
-import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
-import { COLOR_WITH_CATEGORY } from '../constants/color'
 
-const RenderExpandableCell = (props: GridRenderCellParams) => {
+import { useState } from 'react'
+
+import { Navigation } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
+import { Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
+import { useRouter } from 'next/navigation'
+
+import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
+
+import { COLOR_WITH_CATEGORY } from '../constants/color'
+import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
+import { useWorkRules } from '../hooks/useWorkRules'
+
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+
+function RenderExpandableCell(props: GridRenderCellParams) {
   const { value } = props
 
   return (
@@ -78,8 +79,9 @@ export default function New() {
   const { showSnackbar } = useSnackbarContext()
 
   const onSubmit = async () => {
-    const unselectedRows = data
-      .filter((row) => !selectedRowIds.includes(row.id))
+    const unselectedRows = data.filter(
+      (row) => !selectedRowIds.includes(row.id),
+    )
     await onSubmitAnswer({
       unselectedRows,
     })

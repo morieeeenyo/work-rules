@@ -1,10 +1,12 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
-import { SnackbarProvider } from './providers/SnackBarProvider'
+import React from 'react'
 
-const inter = Inter({ subsets: ['latin'] })
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
+
+import { SnackbarProvider } from '@/app/providers/SnackBarProvider'
+
+import type { Metadata } from 'next'
+
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Create Next App',

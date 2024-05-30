@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { Arguments } from 'swr'
 import useSWRMutation from 'swr/mutation'
+
+import type { Arguments } from 'swr'
 
 export const useAnswerRetrospective = () => {
   const { trigger: onSubmitAnswer, isMutating } = useSWRMutation(
