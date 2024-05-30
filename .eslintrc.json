@@ -1,3 +1,77 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"]
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "next/core-web-vitals",
+    "plugin:tailwindcss/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["unused-imports"],
+  "rules": {
+    "semi": "off",
+    "eslint-plugin-import/extensions": [
+      "off",
+      "never",
+      {
+        "json": "always",
+        "svg": "always",
+        "css": "always",
+        "scss": "always",
+        "png": "always",
+        "jpg": "always",
+        "jpeg": "always",
+        "gif": "always",
+        "webp": "always",
+        "tsx": "never",
+        "ts": "never"
+      }
+    ],
+    "eslint-plugin-import/prefer-default-export": [
+      "off",
+      {
+        "target": "single"
+      }
+    ],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".jsx", ".tsx"]
+      }
+    ],
+    "jsx-quotes": ["error", "prefer-single"],
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unsafe-call": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/no-unsafe-return": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "{react,react-dom/**,react-router-dom}",
+            "group": "builtin",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ]
+  }
 }
