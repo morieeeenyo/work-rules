@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import { notionClient } from '@/lib/notionClient'
 
 export async function GET() {

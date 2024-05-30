@@ -1,13 +1,15 @@
 'use client'
 
-import {
+import axios from 'axios'
+import useSWR from 'swr'
+
+import { getPageTitle, getSelectedValue } from '@/app/utils/notion'
+
+import type { WorkRule } from '../types'
+import type {
   PageObjectResponse,
   QueryDatabaseResponse,
 } from '@notionhq/client/build/src/api-endpoints'
-import axios from 'axios'
-import useSWR from 'swr'
-import { getPageTitle, getSelectedValue } from '@/app/utils/notion'
-import { WorkRule } from '../types'
 
 export const useWorkRules = () => {
   const { data, isLoading } = useSWR<WorkRule[]>(

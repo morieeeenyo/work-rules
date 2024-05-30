@@ -62,16 +62,26 @@
         ],
         "pathGroups": [
           {
-            "pattern": "{react,react-dom/**,react-router-dom}",
+            "pattern": "{react, next, react-dom/**,react-router-dom}",
             "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "@app/**",
+            "group": "parent",
             "position": "before"
           }
         ],
         "pathGroupsExcludedImportTypes": ["builtin"],
         "alphabetize": {
           "order": "asc"
-        }
+        },
+        "newlines-between": "always"
       }
+    ],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      { "prefer": "type-imports" }
     ]
   }
 }

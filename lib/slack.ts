@@ -1,4 +1,6 @@
-import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook'
+import { IncomingWebhook } from '@slack/webhook'
+
+import type { IncomingWebhookSendArguments } from '@slack/webhook'
 
 export const slack = {
   sendMessage: async (message: IncomingWebhookSendArguments) => {

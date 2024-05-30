@@ -1,15 +1,20 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Navigation } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
 import { useRouter } from 'next/navigation'
+
 import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
+
 import { COLOR_WITH_CATEGORY } from '../constants/color'
 import { useAnswerRetrospective } from '../hooks/useAnswerRetrospective'
 import { useWorkRules } from '../hooks/useWorkRules'
+
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
 function RenderExpandableCell(props: GridRenderCellParams) {
   const { value } = props
