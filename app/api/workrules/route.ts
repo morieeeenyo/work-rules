@@ -1,8 +1,7 @@
-import { notionClient } from '@/lib/notionClient'
-import { DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import { NextResponse } from 'next/server'
+import { notionClient } from '@/lib/notionClient'
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const response = await notionClient.databases.query({
       database_id: process.env.NOTION_WORKRULES_DATABASE_ID ?? '',

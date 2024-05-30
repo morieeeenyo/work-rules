@@ -1,7 +1,8 @@
 'use client'
-import React, { createContext, useState, useContext, FC } from 'react'
-import Snackbar from '@mui/material/Snackbar'
+
+import React, { FC, createContext, useContext, useState } from 'react'
 import Alert from '@mui/material/Alert'
+import Snackbar from '@mui/material/Snackbar'
 
 type SnackbarSeverity = 'error' | 'warning' | 'info' | 'success'
 
@@ -45,7 +46,7 @@ export const SnackbarProvider: FC<Props> = ({ children }) => {
 
   return (
     <>
-      <SnackbarContext.Provider value={{ showSnackbar: showSnackbar }}>
+      <SnackbarContext.Provider value={{ showSnackbar }}>
         {children}
       </SnackbarContext.Provider>
       <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>

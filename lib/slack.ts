@@ -1,5 +1,4 @@
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook'
-import { NextApiRequest, NextApiResponse } from 'next'
 
 export const slack = {
   sendMessage: async (message: IncomingWebhookSendArguments) => {

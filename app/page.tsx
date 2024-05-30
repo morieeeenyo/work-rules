@@ -1,12 +1,6 @@
 'use client'
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  Typography,
-  useTheme,
-} from '@mui/material'
+
+import { Button, Grid, Typography } from '@mui/material'
 
 export default function Home() {
   return (
