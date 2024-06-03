@@ -10,5 +10,4 @@ export interface WorkRuleAnswer {
   AchievementRateCommon: number
   AchievementRateEngineer: number
   AchievementRateManagement: number
-  unAchievedRules: string
 }

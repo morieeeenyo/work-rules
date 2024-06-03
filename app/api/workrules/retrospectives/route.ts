@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server'
 
-import { getRelationPageProperty } from '@/app/utils/notion'
 import { notionClient } from '@/lib/notionClient'
 import { slack } from '@/lib/slack'
 
 import type { WorkRule } from '@/app/workrules/types'
-import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 
 export async function GET() {
   try {
@@ -13,36 +11,7 @@ export async function GET() {
       database_id: process.env.NOTION_RETROSPECTIVE_DATABASE_ID ?? '',
     })
 
-    const resultsWithWorkRuleTitle = await Promise.all(
-      response.results.map(async (page) => {
-        if (!('properties' in page)) return null
-        const properties = page.properties as PageObjectResponse['properties']
-
-        const unachievedRulesProperty =
-          properties['体現できなかったワークルール']
-
-        const unAchievedRules = await getRelationPageProperty(
-          unachievedRulesProperty,
-          'title',
-        )
-
-        return {
-          ...page,
-          properties: {
-            ...page.properties,
-            体現できなかったワークルール: {
-              type: 'relation',
-              relation: unAchievedRules,
-            },
-          },
-        }
-      }),
-    )
-
-    return NextResponse.json({
-      ...response,
-      results: resultsWithWorkRuleTitle,
-    })
+    return NextResponse.json(response)
   } catch (err) {
     return NextResponse.json(err)
   }
