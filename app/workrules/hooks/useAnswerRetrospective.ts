@@ -5,7 +5,7 @@ import type { Arguments } from 'swr'
 
 export const useAnswerRetrospective = () => {
   const { trigger: onSubmitAnswer, isMutating } = useSWRMutation(
-    '/api/workrules/retrospective',
+    '/api/workrules/retrospectives',
     (url: string, { arg }: { arg: Arguments }) => {
       const response = axios.post(url, arg)
 
