@@ -1,30 +1,79 @@
 'use client'
 
 import { Navigation } from '@mui/icons-material'
-import { Fab, Grid, Typography } from '@mui/material'
+import { Button, Fab, Grid, Typography, styled } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 
 import { useRetrospectives } from '../hooks/useRetrospectives'
 
 import type { GridColDef } from '@mui/x-data-grid'
 
+const TableCellText = styled(Typography)`
+  height: 30px;
+  line-height: 30px;
+  margin: auto 0;
+`
+
 const columns: GridColDef[] = [
-  { field: 'createdAt', headerName: '回答日時', width: 200 },
-  { field: 'AchievementRateCommon', headerName: '共通', width: 200 },
-  { field: 'AchievementRateEngineer', headerName: 'エンジニア', width: 200 },
   {
-    field: 'AchievementRateManagement',
-    headerName: 'マネジメント',
-    width: 200,
+    field: 'createdAt',
+    headerName: '回答日時',
+    width: 150,
+    cellClassName: 'flex flex-col justify-center',
+    renderCell: (params) => (
+      <TableCellText variant='subtitle2'>{params.value}</TableCellText>
+    ),
   },
   {
-    field: 'unAchievedRules',
-    headerName: '体現できなかったワークルール',
-    width: 200,
+    field: 'AchievementRateCommon',
+    headerName: '体現度(共通)',
+    align: 'center',
+    headerAlign: 'center',
+    width: 170,
+    cellClassName: 'flex flex-col justify-center',
     renderCell: (params) => (
-      <Typography variant='body2' whiteSpace='pre-wrap'>
-        {params.value}
-      </Typography>
+      <TableCellText variant='subtitle2'>{params.value}</TableCellText>
+    ),
+  },
+  {
+    field: 'AchievementRateEngineer',
+    headerName: '体現度(エンジニア)',
+    align: 'center',
+    headerAlign: 'center',
+    width: 170,
+    cellClassName: 'flex flex-col justify-center',
+    renderCell: (params) => (
+      <TableCellText variant='subtitle2'>{params.value}</TableCellText>
+    ),
+  },
+  {
+    field: 'AchievementRateManagement',
+    headerName: '体現度(マネジメント)',
+    align: 'center',
+    headerAlign: 'center',
+    width: 170,
+    cellClassName: 'flex flex-col justify-center',
+    renderCell: (params) => (
+      <TableCellText variant='subtitle2'>{params.value}</TableCellText>
+    ),
+  },
+  {
+    field: 'id',
+    headerName: '',
+    width: 200,
+    align: 'center',
+    cellClassName: 'h-200px',
+    renderCell: (params) => (
+      <Button
+        variant='contained'
+        color='inherit'
+        href={`/workrules/retrospectives/${params.value}`}
+        style={{
+          margin: '0.5rem auto',
+        }}
+      >
+        詳細を見る
+      </Button>
     ),
   },
 ]
@@ -55,6 +104,9 @@ export default function RetrospectiveAnswerList() {
           rows={data}
           hideFooter
           getRowHeight={() => 'auto'}
+          autoHeight
+          disableColumnMenu
+          disableColumnFilter
         />
       </Grid>
       <Grid
