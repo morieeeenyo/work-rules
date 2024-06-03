@@ -26,7 +26,11 @@ export default function Home() {
           </Button>
         </Grid>
         <Grid item>
-          <Button variant='contained' color='inherit'>
+          <Button
+            variant='contained'
+            color='inherit'
+            href='/workrules/retrospectives'
+          >
             過去の回答結果を見る
           </Button>
         </Grid>

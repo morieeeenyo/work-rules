@@ -5,6 +5,18 @@ import { slack } from '@/lib/slack'
 
 import type { WorkRule } from '@/app/workrules/types'
 
+export async function GET() {
+  try {
+    const response = await notionClient.databases.query({
+      database_id: process.env.NOTION_RETROSPECTIVE_DATABASE_ID ?? '',
+    })
+
+    return NextResponse.json(response)
+  } catch (err) {
+    return NextResponse.json(err)
+  }
+}
+
 const generateSlackMessage = (unselectedRows: WorkRule[]) => {
   const header = {
     type: 'header',

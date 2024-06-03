@@ -17,3 +17,18 @@ export const getSelectedValue = (
 
   return property.select?.name
 }
+
+export const getDateValue = (
+  property: PageObjectResponse['properties'][string],
+) => {
+  if (property.type !== 'date') return {}
+  if (!('date' in property)) return {}
+
+  const start = property.date?.start
+  const end = property.date?.end
+
+  return {
+    start,
+    end,
+  }
+}
