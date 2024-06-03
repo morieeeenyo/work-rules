@@ -1,9 +1,4 @@
-import { notionClient } from '@/lib/notionClient'
-
-import type {
-  GetPagePropertyResponse,
-  PageObjectResponse,
-} from '@notionhq/client/build/src/api-endpoints'
+import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 
 export const getPageTitle = (
   property: PageObjectResponse['properties'][string],
@@ -36,34 +31,4 @@ export const getDateValue = (
     start,
     end,
   }
-}
-
-export const getRelationPageProperty = async (
-  relationProperty: PageObjectResponse['properties'][string],
-  targetPropertyId: string,
-) => {
-  if (relationProperty.type !== 'relation') return null
-  if (!('relation' in relationProperty)) return null
-
-  return await Promise.all(
-    relationProperty.relation.map(async (relation) => {
-      const page = await notionClient.pages.properties.retrieve({
-        page_id: relation.id,
-        property_id: targetPropertyId,
-      })
-      return {
-        ...relation,
-        page,
-      }
-    }),
-  )
-}
-
-export type RelationPropertyWithPage = {
-  type: 'relation'
-  relation: Array<{
-    id: string
-    page: GetPagePropertyResponse
-  }>
-  id: string
 }
