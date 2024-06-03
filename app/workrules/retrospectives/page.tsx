@@ -1,9 +1,36 @@
 'use client'
 
 import { Navigation } from '@mui/icons-material'
-import { Fab, Grid, Table, Typography } from '@mui/material'
+import { Fab, Grid, Typography } from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
+
+import { useRetrospectives } from '../hooks/useRetrospectives'
+
+import type { GridColDef } from '@mui/x-data-grid'
+
+const columns: GridColDef[] = [
+  { field: 'createdAt', headerName: '回答日時', width: 200 },
+  { field: 'AchievementRateCommon', headerName: '共通', width: 200 },
+  { field: 'AchievementRateEngineer', headerName: 'エンジニア', width: 200 },
+  {
+    field: 'AchievementRateManagement',
+    headerName: 'マネジメント',
+    width: 200,
+  },
+  {
+    field: 'unAchievedRules',
+    headerName: '体現できなかったワークルール',
+    width: 200,
+    renderCell: (params) => (
+      <Typography variant='body2' whiteSpace='pre-wrap'>
+        {params.value}
+      </Typography>
+    ),
+  },
+]
 
 export default function RetrospectiveAnswerList() {
+  const { data, isLoading } = useRetrospectives()
   return (
     <Grid
       container
@@ -22,7 +49,13 @@ export default function RetrospectiveAnswerList() {
         </Grid>
       </Grid>
       <Grid item>
-        <Table />
+        <DataGrid
+          loading={isLoading}
+          columns={columns}
+          rows={data}
+          hideFooter
+          getRowHeight={() => 'auto'}
+        />
       </Grid>
       <Grid
         item
