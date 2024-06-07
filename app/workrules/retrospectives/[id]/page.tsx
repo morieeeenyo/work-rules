@@ -3,8 +3,10 @@
 import { Navigation } from '@mui/icons-material'
 import { Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
+import { useParams } from 'next/navigation'
 
 import { COLOR_WITH_CATEGORY } from '../../constants/color'
+import { useRetrospective } from '../../hooks/useRetrospective'
 
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
@@ -63,6 +65,9 @@ const columns: GridColDef[] = [
 ]
 
 export default function RetrospectiveAnswerDetail() {
+  const { id: retrospectiveId } = useParams() as { id: string }
+  const { data, isLoading } = useRetrospective({ retrospectiveId })
+
   return (
     <Grid
       container
@@ -82,12 +87,13 @@ export default function RetrospectiveAnswerDetail() {
       </Grid>
       <Grid item>
         <DataGrid
-          loading={false}
+          loading={isLoading}
           columns={columns}
-          rows={[]}
-          hideFooter
+          rows={data?.unachievedRules ?? []}
           getRowHeight={() => 'auto'}
           autoHeight
+          hideFooter
+          disableColumnMenu
         />
       </Grid>
       <Grid
