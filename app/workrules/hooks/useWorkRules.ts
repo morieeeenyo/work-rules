@@ -5,7 +5,7 @@ import useSWR from 'swr'
 
 import { getPageTitle, getSelectedValue } from '@/app/utils/notion'
 
-import type { WorkRule } from '@/app/workrules/types'
+import type { WorkRule } from '../types'
 import type {
   PageObjectResponse,
   QueryDatabaseResponse,
