@@ -4,7 +4,7 @@ import useSWR from 'swr'
 
 import { getDateValue } from '@/app/utils/notion'
 
-import type { WorkRuleAnswer } from '../types'
+import type { WorkRuleAnswer } from '@/app/workrules/types'
 import type {
   PageObjectResponse,
   QueryDatabaseResponse,
