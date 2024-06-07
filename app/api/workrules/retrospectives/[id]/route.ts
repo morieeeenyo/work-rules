@@ -4,7 +4,7 @@ import { notionClient } from '@/lib/notionClient'
 
 import type { GetPageResponse } from '@notionhq/client/build/src/api-endpoints'
 
-export const convertResponse = async (response: GetPageResponse) => {
+const convertResponse = async (response: GetPageResponse) => {
   if (!('properties' in response)) return response
   const unachievedRulesProperty =
     response.properties['体現できなかったワークルール']
