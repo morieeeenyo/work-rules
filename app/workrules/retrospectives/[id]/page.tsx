@@ -1,7 +1,18 @@
 'use client'
 
 import { Navigation } from '@mui/icons-material'
-import { Box, Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  Fab,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { useParams } from 'next/navigation'
 
@@ -139,6 +150,49 @@ export default function RetrospectiveAnswerDetail() {
             disableColumnMenu
             disableColumnFilter
           />
+        </Grid>
+      </Grid>
+      <Grid
+        item
+        direction='row'
+        container
+        justifyContent='space-between'
+        width='960px'
+        columnSpacing={4}
+      >
+        <Grid item sm={6}>
+          <Typography variant='subtitle1'>
+            今週必ず達成するワークルール
+          </Typography>
+          <Select
+            style={{
+              width: '100%',
+            }}
+          >
+            {data?.unachievedRules.map((rule) => (
+              <MenuItem key={rule.id}>{rule.title}</MenuItem>
+            ))}
+          </Select>
+        </Grid>
+        <Grid item sm={6}>
+          <Typography variant='subtitle1'>アクションプラン</Typography>
+          <TextField
+            multiline
+            maxRows={10}
+            minRows={5}
+            fullWidth
+            placeholder='今週実施するアクションプランを決めましょう'
+          />
+          <Box mt={1} width='100%' display='flex' justifyContent='end'>
+            <Button
+              variant='contained'
+              style={{
+                marginLeft: 'auto',
+              }}
+            >
+              送信
+            </Button>
+          </Box>
         </Grid>
       </Grid>
       <Grid
