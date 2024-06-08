@@ -4,7 +4,9 @@ import { notionClient } from '@/lib/notionClient'
 
 import type { GetPageResponse } from '@notionhq/client/build/src/api-endpoints'
 
-const convertResponse = async (response: GetPageResponse) => {
+const generateResponseWithRelatedWorkRulePage = async (
+  response: GetPageResponse,
+) => {
   if (!('properties' in response)) return response
   const unachievedRulesProperty =
     response.properties['体現できなかったワークルール']
@@ -12,9 +14,9 @@ const convertResponse = async (response: GetPageResponse) => {
     unachievedRulesProperty.type === 'relation'
       ? await Promise.all(
           unachievedRulesProperty.relation.map(async (relationObject) => {
-            const { id } = relationObject
+            const { id: workRuleId } = relationObject
             return await notionClient.pages.retrieve({
-              page_id: id,
+              page_id: workRuleId,
             })
           }),
         )
@@ -42,9 +44,10 @@ export async function GET(
       page_id: id,
     })
 
-    const convertedResponse = await convertResponse(response)
+    const responseWithRelatedWorkRulePage =
+      await generateResponseWithRelatedWorkRulePage(response)
 
-    return NextResponse.json(convertedResponse)
+    return NextResponse.json(responseWithRelatedWorkRulePage)
   } catch (err) {
     return NextResponse.json(err)
   }
