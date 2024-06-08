@@ -10,6 +10,7 @@ import { useRetrospective } from '../../hooks/useRetrospective'
 
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
+// NOTE: DataGrid周りは共通化してもいいかも
 function RenderExpandableCell(props: GridRenderCellParams) {
   const { value } = props
 
