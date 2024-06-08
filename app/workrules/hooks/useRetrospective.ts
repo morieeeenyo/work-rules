@@ -31,19 +31,18 @@ export const useRetrospective = ({ retrospectiveId }: Args) => {
 
       if (!createdAt) throw new Error('回答日時が取得できませんでした')
 
-      const unachievedRulesProperty = properties[
-        '体現できなかったワークルール'
-      ] as RelationPropertyWithDetail
+      const unachievedRulesProperty = properties['体現できなかったワークルール']
 
-      const unachievedRules = unachievedRulesProperty.relation
+      const unachievedRules = (
+        unachievedRulesProperty as RelationPropertyWithDetail
+      ).relation
         .map((page) => {
           if (!('properties' in page)) return null
-          const properties = page.properties as PageObjectResponse['properties']
           return {
             id: page.id,
-            title: getPageTitle(properties['ルール']),
+            title: getPageTitle(page.properties['ルール']),
             category: getSelectedValue(
-              properties['種別'],
+              page.properties['種別'],
             ) as WorkRule['category'],
           }
         })
