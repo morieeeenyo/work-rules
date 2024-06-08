@@ -1,7 +1,7 @@
 'use client'
 
 import { Navigation } from '@mui/icons-material'
-import { Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import { Box, Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { useParams } from 'next/navigation'
 
@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
   {
     field: 'title',
     headerName: 'タイトル',
-    width: 1000,
+    width: 800,
     renderCell: (params: GridRenderCellParams) => (
       <RenderExpandableCell {...params} />
     ),
@@ -48,17 +48,19 @@ const columns: GridColDef[] = [
     headerAlign: 'center',
     renderCell: (params: GridRenderCellParams) =>
       params.value ? (
-        <Chip
-          label={params.value}
-          style={{
-            width: 'fit-content',
-            lineHeight: '1',
-            backgroundColor:
-              COLOR_WITH_CATEGORY[
-                params.value as keyof typeof COLOR_WITH_CATEGORY
-              ],
-          }}
-        />
+        <Box p={0.5}>
+          <Chip
+            label={params.value}
+            style={{
+              width: 'fit-content',
+              lineHeight: '1',
+              backgroundColor:
+                COLOR_WITH_CATEGORY[
+                  params.value as keyof typeof COLOR_WITH_CATEGORY
+                ],
+            }}
+          />
+        </Box>
       ) : null,
     cellClassName: 'flex flex-col items-center justify-center cursor-pointer',
   },
@@ -81,20 +83,62 @@ export default function RetrospectiveAnswerDetail() {
       <Grid item container justifyContent='space-between' width='960px'>
         <Grid item>
           <Typography variant='h4' fontWeight='bold'>
-            回答結果一覧
+            回答結果詳細
           </Typography>
         </Grid>
       </Grid>
-      <Grid item>
-        <DataGrid
-          loading={isLoading}
-          columns={columns}
-          rows={data?.unachievedRules ?? []}
-          getRowHeight={() => 'auto'}
-          autoHeight
-          hideFooter
-          disableColumnMenu
-        />
+      <Grid
+        item
+        container
+        direction='column'
+        justifyContent='space-between'
+        width='960px'
+      >
+        <Grid item>
+          <Typography variant='subtitle1'>
+            回答日時: {data?.createdAt}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant='subtitle1'>
+            体現度(共通): {data?.AchievementRateCommon ?? 0}%
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant='subtitle1'>
+            体現度(エンジニア): {data?.AchievementRateEngineer ?? 0}%
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant='subtitle1'>
+            体現度(マネジメント): {data?.AchievementRateManagement ?? 0}%
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid
+        item
+        container
+        direction='column'
+        justifyContent='space-between'
+        width='960px'
+      >
+        <Grid item>
+          <Typography variant='subtitle1'>
+            体現できなかったワークルール
+          </Typography>
+        </Grid>
+        <Grid item>
+          <DataGrid
+            loading={isLoading}
+            columns={columns}
+            rows={data?.unachievedRules ?? []}
+            hideFooter
+            autoHeight
+            getRowHeight={() => 'auto'}
+            disableColumnMenu
+            disableColumnFilter
+          />
+        </Grid>
       </Grid>
       <Grid
         item
