@@ -98,6 +98,7 @@ export default function RetrospectiveAnswerDetail() {
   >(undefined)
 
   const onSubmit = async () => {
+    if (!selectedWorkRuleId || !actionPlan) return
     await onSubmitActionPlan({
       actionPlan,
       selectedWorkRuleId,

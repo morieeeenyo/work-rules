@@ -3,15 +3,17 @@ import { NextResponse } from 'next/server'
 
 import { notionClient } from '@/lib/notionClient'
 
+export type SetActionPlanParams = {
+  actionPlan: string
+  selectedWorkRuleId: string
+}
+
 export async function POST(
   request: Request,
   { params }: { params: { id: string } },
 ) {
   const body = await request.json()
-  const {
-    actionPlan,
-    selectedWorkRuleId,
-  }: { actionPlan: string; selectedWorkRuleId: string } = body
+  const { actionPlan, selectedWorkRuleId }: SetActionPlanParams = body
   const { id: retrospectiveId } = params
   try {
     const response = await notionClient.pages.create({
