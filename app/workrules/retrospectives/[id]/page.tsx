@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import { Navigation } from '@mui/icons-material'
 import {
   Box,
@@ -16,8 +18,11 @@ import {
 import { DataGrid } from '@mui/x-data-grid'
 import { useParams } from 'next/navigation'
 
+import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
+
 import { COLOR_WITH_CATEGORY } from '../../constants/color'
 import { useRetrospective } from '../../hooks/useRetrospective'
+import { useSetActionPlan } from '../../hooks/useSetActionPlan'
 
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
@@ -81,6 +86,25 @@ const columns: GridColDef[] = [
 export default function RetrospectiveAnswerDetail() {
   const { id: retrospectiveId } = useParams() as { id: string }
   const { data, isLoading } = useRetrospective({ retrospectiveId })
+  const { onSubmitActionPlan } = useSetActionPlan({ retrospectiveId })
+  const { showSnackbar } = useSnackbarContext()
+  const [actionPlan, setActionPlan] = useState<string>('')
+  const [selectedWorkRuleId, setSelectedWorkRuleId] = useState<
+    string | undefined
+  >(undefined)
+
+  const onSubmit = async () => {
+    await onSubmitActionPlan({
+      actionPlan,
+      selectedWorkRuleId,
+    })
+      .then(() => {
+        showSnackbar?.('success', '回答を送信しました')
+      })
+      .catch(() => {
+        showSnackbar?.('error', '回答の送信に失敗しました')
+      })
+  }
 
   return (
     <Grid
@@ -168,9 +192,13 @@ export default function RetrospectiveAnswerDetail() {
             style={{
               width: '100%',
             }}
+            value={selectedWorkRuleId}
+            onChange={(e) => setSelectedWorkRuleId(e.target.value as string)}
           >
             {data?.unachievedRules.map((rule) => (
-              <MenuItem key={rule.id}>{rule.title}</MenuItem>
+              <MenuItem value={rule.id} key={rule.id}>
+                {rule.title}
+              </MenuItem>
             ))}
           </Select>
         </Grid>
@@ -182,6 +210,14 @@ export default function RetrospectiveAnswerDetail() {
             minRows={5}
             fullWidth
             placeholder='今週実施するアクションプランを決めましょう'
+            value={actionPlan}
+            onChange={(e) => setActionPlan(e.target.value)}
+            disabled={!selectedWorkRuleId}
+            style={{
+              backgroundColor: !selectedWorkRuleId
+                ? 'rgba(0, 0, 0, 0.12)'
+                : '#fff',
+            }}
           />
           <Box mt={1} width='100%' display='flex' justifyContent='end'>
             <Button
@@ -189,6 +225,8 @@ export default function RetrospectiveAnswerDetail() {
               style={{
                 marginLeft: 'auto',
               }}
+              onClick={onSubmit}
+              disabled={!selectedWorkRuleId || !actionPlan}
             >
               送信
             </Button>
