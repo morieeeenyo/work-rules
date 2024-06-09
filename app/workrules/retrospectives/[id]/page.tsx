@@ -1,12 +1,30 @@
 'use client'
 
+import { useState } from 'react'
+
 import { Navigation } from '@mui/icons-material'
-import { Box, Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import {
+  Box,
+  Chip,
+  Fab,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { useParams } from 'next/navigation'
 
+import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
+
 import { COLOR_WITH_CATEGORY } from '../../constants/color'
 import { useRetrospective } from '../../hooks/useRetrospective'
+import { useSetActionPlan } from '../../hooks/useSetActionPlan'
 
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
@@ -70,6 +88,31 @@ const columns: GridColDef[] = [
 export default function RetrospectiveAnswerDetail() {
   const { id: retrospectiveId } = useParams() as { id: string }
   const { data, isLoading } = useRetrospective({ retrospectiveId })
+  const { onSubmitActionPlan, isSubmitting } = useSetActionPlan({
+    retrospectiveId,
+  })
+  const { showSnackbar } = useSnackbarContext()
+  const [actionPlan, setActionPlan] = useState<string>('')
+  const [selectedWorkRuleId, setSelectedWorkRuleId] = useState<
+    string | undefined
+  >(undefined)
+
+  const onSubmit = async () => {
+    const selectedWorkRule = data?.unachievedRules.find(
+      (rule) => rule.id === selectedWorkRuleId,
+    )
+    if (!selectedWorkRule || !actionPlan) return
+    await onSubmitActionPlan({
+      actionPlan,
+      selectedWorkRule,
+    })
+      .then(() => {
+        showSnackbar?.('success', 'アクションプランを設定しました')
+      })
+      .catch(() => {
+        showSnackbar?.('error', 'アクションプランを設定できませんでした')
+      })
+  }
 
   return (
     <Grid
@@ -139,6 +182,72 @@ export default function RetrospectiveAnswerDetail() {
             disableColumnMenu
             disableColumnFilter
           />
+        </Grid>
+      </Grid>
+      <Grid item container width='960px'>
+        <Grid item>
+          <Typography variant='subtitle1' gutterBottom>
+            アクションプラン
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          direction='row'
+          container
+          justifyContent='space-between'
+          width='960px'
+          columnSpacing={4}
+        >
+          <Grid item sm={6}>
+            <FormControl fullWidth>
+              <InputLabel required>
+                今週必ず達成するワークルールを選択してください
+              </InputLabel>
+              <Select
+                style={{
+                  width: '100%',
+                }}
+                value={selectedWorkRuleId}
+                onChange={(e) =>
+                  setSelectedWorkRuleId(e.target.value as string)
+                }
+                label='今週必ず達成するワークルールを選択してください'
+              >
+                {data?.unachievedRules.map((rule) => (
+                  <MenuItem value={rule.id} key={rule.id}>
+                    {rule.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={6}>
+            <FormControl fullWidth>
+              <TextField
+                multiline
+                maxRows={10}
+                minRows={5}
+                fullWidth
+                label='今週実施するアクションプランを決めましょう'
+                required
+                value={actionPlan}
+                onChange={(e) => setActionPlan(e.target.value)}
+              />
+            </FormControl>
+            <Box mt={1} width='100%' display='flex' justifyContent='end'>
+              <LoadingButton
+                variant='contained'
+                style={{
+                  marginLeft: 'auto',
+                }}
+                onClick={onSubmit}
+                disabled={!selectedWorkRuleId || !actionPlan}
+                loading={isSubmitting}
+              >
+                送信
+              </LoadingButton>
+            </Box>
+          </Grid>
         </Grid>
       </Grid>
       <Grid

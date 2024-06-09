@@ -17,7 +17,15 @@ export async function GET() {
   }
 }
 
-const generateSlackMessage = (unselectedRows: WorkRule[]) => {
+type GenerateSlackMessageArgs = {
+  unselectedRows: WorkRule[]
+  retrospectiveDetailUrl: string
+}
+
+const generateSlackMessage = ({
+  unselectedRows,
+  retrospectiveDetailUrl,
+}: GenerateSlackMessageArgs) => {
   const header = {
     type: 'header',
     text: {
@@ -69,24 +77,6 @@ const generateSlackMessage = (unselectedRows: WorkRule[]) => {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: '回答内容を確認するにはこちらをクリック :arrow_right:',
-      },
-      accessory: {
-        type: 'button',
-        text: {
-          type: 'plain_text',
-          text: '確認する',
-          emoji: true,
-        },
-        value: 'click_me_123',
-        url: 'https://google.com',
-        action_id: 'button-action',
-      },
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
         text: '体現度向上のためにアクションプランを設定しましょう :muscle:',
       },
       accessory: {
@@ -97,7 +87,7 @@ const generateSlackMessage = (unselectedRows: WorkRule[]) => {
           emoji: true,
         },
         value: 'click_me_123',
-        url: 'https://google.com',
+        url: retrospectiveDetailUrl,
         action_id: 'button-action',
         style: 'primary',
       },
@@ -137,7 +127,10 @@ export async function POST(request: Request) {
         },
       },
     })
-    const message = generateSlackMessage(unselectedRows)
+    const message = generateSlackMessage({
+      unselectedRows,
+      retrospectiveDetailUrl: `${request.headers.get('origin')}/workrules/retrospectives/${response.id}`,
+    })
     await slack.sendMessage(message)
     return NextResponse.json(response)
   } catch (err) {
