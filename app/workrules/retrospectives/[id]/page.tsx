@@ -8,7 +8,9 @@ import {
   Button,
   Chip,
   Fab,
+  FormControl,
   Grid,
+  InputLabel,
   MenuItem,
   Select,
   TextField,
@@ -176,61 +178,69 @@ export default function RetrospectiveAnswerDetail() {
           />
         </Grid>
       </Grid>
-      <Grid
-        item
-        direction='row'
-        container
-        justifyContent='space-between'
-        width='960px'
-        columnSpacing={4}
-      >
-        <Grid item sm={6}>
-          <Typography variant='subtitle1'>
-            今週必ず達成するワークルール
+      <Grid item container width='960px'>
+        <Grid item>
+          <Typography variant='subtitle1' gutterBottom>
+            アクションプラン
           </Typography>
-          <Select
-            style={{
-              width: '100%',
-            }}
-            value={selectedWorkRuleId}
-            onChange={(e) => setSelectedWorkRuleId(e.target.value as string)}
-          >
-            {data?.unachievedRules.map((rule) => (
-              <MenuItem value={rule.id} key={rule.id}>
-                {rule.title}
-              </MenuItem>
-            ))}
-          </Select>
         </Grid>
-        <Grid item sm={6}>
-          <Typography variant='subtitle1'>アクションプラン</Typography>
-          <TextField
-            multiline
-            maxRows={10}
-            minRows={5}
-            fullWidth
-            placeholder='今週実施するアクションプランを決めましょう'
-            value={actionPlan}
-            onChange={(e) => setActionPlan(e.target.value)}
-            disabled={!selectedWorkRuleId}
-            style={{
-              backgroundColor: !selectedWorkRuleId
-                ? 'rgba(0, 0, 0, 0.12)'
-                : '#fff',
-            }}
-          />
-          <Box mt={1} width='100%' display='flex' justifyContent='end'>
-            <Button
-              variant='contained'
-              style={{
-                marginLeft: 'auto',
-              }}
-              onClick={onSubmit}
-              disabled={!selectedWorkRuleId || !actionPlan}
-            >
-              送信
-            </Button>
-          </Box>
+        <Grid
+          item
+          direction='row'
+          container
+          justifyContent='space-between'
+          width='960px'
+          columnSpacing={4}
+        >
+          <Grid item sm={6}>
+            <FormControl fullWidth>
+              <InputLabel required>
+                今週必ず達成するワークルールを選択してください
+              </InputLabel>
+              <Select
+                style={{
+                  width: '100%',
+                }}
+                value={selectedWorkRuleId}
+                onChange={(e) =>
+                  setSelectedWorkRuleId(e.target.value as string)
+                }
+                label='今週必ず達成するワークルールを選択してください'
+              >
+                {data?.unachievedRules.map((rule) => (
+                  <MenuItem value={rule.id} key={rule.id}>
+                    {rule.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={6}>
+            <FormControl fullWidth>
+              <TextField
+                multiline
+                maxRows={10}
+                minRows={5}
+                fullWidth
+                label='今週実施するアクションプランを決めましょう'
+                required
+                value={actionPlan}
+                onChange={(e) => setActionPlan(e.target.value)}
+              />
+            </FormControl>
+            <Box mt={1} width='100%' display='flex' justifyContent='end'>
+              <Button
+                variant='contained'
+                style={{
+                  marginLeft: 'auto',
+                }}
+                onClick={onSubmit}
+                disabled={!selectedWorkRuleId || !actionPlan}
+              >
+                送信
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
       </Grid>
       <Grid
