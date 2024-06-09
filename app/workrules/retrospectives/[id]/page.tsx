@@ -103,10 +103,10 @@ export default function RetrospectiveAnswerDetail() {
       selectedWorkRuleId,
     })
       .then(() => {
-        showSnackbar?.('success', '回答を送信しました')
+        showSnackbar?.('success', 'アクションプランを設定しました')
       })
       .catch(() => {
-        showSnackbar?.('error', '回答の送信に失敗しました')
+        showSnackbar?.('error', 'アクションプランを設定できませんでした')
       })
   }
 
