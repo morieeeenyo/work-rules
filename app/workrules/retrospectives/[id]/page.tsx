@@ -3,9 +3,9 @@
 import { useState } from 'react'
 
 import { Navigation } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
-  Button,
   Chip,
   Fab,
   FormControl,
@@ -88,7 +88,9 @@ const columns: GridColDef[] = [
 export default function RetrospectiveAnswerDetail() {
   const { id: retrospectiveId } = useParams() as { id: string }
   const { data, isLoading } = useRetrospective({ retrospectiveId })
-  const { onSubmitActionPlan } = useSetActionPlan({ retrospectiveId })
+  const { onSubmitActionPlan, isSubmitting } = useSetActionPlan({
+    retrospectiveId,
+  })
   const { showSnackbar } = useSnackbarContext()
   const [actionPlan, setActionPlan] = useState<string>('')
   const [selectedWorkRuleId, setSelectedWorkRuleId] = useState<
@@ -229,16 +231,17 @@ export default function RetrospectiveAnswerDetail() {
               />
             </FormControl>
             <Box mt={1} width='100%' display='flex' justifyContent='end'>
-              <Button
+              <LoadingButton
                 variant='contained'
                 style={{
                   marginLeft: 'auto',
                 }}
                 onClick={onSubmit}
                 disabled={!selectedWorkRuleId || !actionPlan}
+                loading={isSubmitting}
               >
                 送信
-              </Button>
+              </LoadingButton>
             </Box>
           </Grid>
         </Grid>

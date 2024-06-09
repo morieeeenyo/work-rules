@@ -8,17 +8,18 @@ type Args = {
 }
 
 export const useSetActionPlan = ({ retrospectiveId }: Args) => {
-  const { trigger: onSubmitActionPlan, isMutating } = useSWRMutation(
-    `/api/workrules/retrospectives/${retrospectiveId}/actionPlans`,
-    (url: string, { arg }: { arg: Arguments }) => {
-      const response = axios.post(url, arg)
+  const { trigger: onSubmitActionPlan, isMutating: isSubmitting } =
+    useSWRMutation(
+      `/api/workrules/retrospectives/${retrospectiveId}/actionPlans`,
+      (url: string, { arg }: { arg: Arguments }) => {
+        const response = axios.post(url, arg)
 
-      return response
-    },
-  )
+        return response
+      },
+    )
 
   return {
     onSubmitActionPlan,
-    isMutating,
+    isSubmitting,
   }
 }
