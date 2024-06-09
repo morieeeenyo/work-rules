@@ -3,9 +3,11 @@ import { NextResponse } from 'next/server'
 
 import { notionClient } from '@/lib/notionClient'
 
+import type { WorkRule } from '@/app/workrules/types'
+
 export type SetActionPlanParams = {
   actionPlan: string
-  selectedWorkRuleId: string
+  selectedWorkRule: WorkRule
 }
 
 export async function POST(
@@ -13,7 +15,7 @@ export async function POST(
   { params }: { params: { id: string } },
 ) {
   const body = await request.json()
-  const { actionPlan, selectedWorkRuleId }: SetActionPlanParams = body
+  const { actionPlan, selectedWorkRule }: SetActionPlanParams = body
   const { id: retrospectiveId } = params
   try {
     const response = await notionClient.pages.create({
@@ -40,7 +42,7 @@ export async function POST(
         今週達成するワークルール: {
           relation: [
             {
-              id: selectedWorkRuleId,
+              id: selectedWorkRule.id,
             },
           ],
         },
