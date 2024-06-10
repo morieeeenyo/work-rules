@@ -103,13 +103,13 @@ export default function RetrospectiveAnswerDetail() {
   })
 
   const onSubmit = async () => {
-    const selectedWorkRule = data?.unachievedRules.find(
+    const targetWorkRule = data?.unachievedRules.find(
       (rule) => rule.id === targetWorkRuleId,
     )
-    if (!selectedWorkRule || !actionPlanInput) return
+    if (!targetWorkRule || !actionPlanInput) return
     await onSubmitActionPlan({
       actionPlan: actionPlanInput,
-      selectedWorkRule,
+      targetWorkRule,
     })
       .then(() => {
         showSnackbar?.('success', 'アクションプランを設定しました')

@@ -42,7 +42,7 @@ export async function GET(
 
 export type SetActionPlanParams = {
   actionPlan: string
-  selectedWorkRule: WorkRule
+  targetWorkRule: WorkRule
 }
 
 export async function POST(
@@ -50,7 +50,7 @@ export async function POST(
   { params }: { params: { id: string } },
 ) {
   const body = await request.json()
-  const { actionPlan, selectedWorkRule }: SetActionPlanParams = body
+  const { actionPlan, targetWorkRule }: SetActionPlanParams = body
   const { id: retrospectiveId } = params
   try {
     const response = await notionClient.pages.create({
@@ -77,7 +77,7 @@ export async function POST(
         今週達成するワークルール: {
           relation: [
             {
-              id: selectedWorkRule.id,
+              id: targetWorkRule.id,
             },
           ],
         },
