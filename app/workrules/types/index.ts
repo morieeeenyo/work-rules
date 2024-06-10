@@ -25,3 +25,9 @@ export type RelationPropertyWithDetail =
   PageObjectResponse['properties']['relation'] & {
     relation: GetPageResponse[]
   }
+
+export type ActionPlan = {
+  id: string
+  targetWorkRule: string
+  actionPlan: string
+}
