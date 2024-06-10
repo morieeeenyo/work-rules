@@ -11,6 +11,8 @@ export const generateResponseWithRelatedPage = async (
 ) => {
   if (!('properties' in response)) return response
   const unachievedRulesProperty = response.properties[propertyName]
+  if (!unachievedRulesProperty) return response
+  if (unachievedRulesProperty.type !== 'relation') return response
   const unachievedRules = await getRelatedPage(unachievedRulesProperty)
 
   return {
