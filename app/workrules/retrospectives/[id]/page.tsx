@@ -3,17 +3,12 @@
 import { useState } from 'react'
 
 import { Navigation } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
 import {
   Box,
   Chip,
+  CircularProgress,
   Fab,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
   Tooltip,
   Typography,
 } from '@mui/material'
@@ -23,9 +18,14 @@ import { useParams } from 'next/navigation'
 import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
 
 import { COLOR_WITH_CATEGORY } from '../../constants/color'
+import { useActionPlan } from '../../hooks/useActionPlan'
 import { useRetrospective } from '../../hooks/useRetrospective'
 import { useSetActionPlan } from '../../hooks/useSetActionPlan'
 
+import { ActionPlanForm } from './_components/ActionPlanForm'
+import { ActionPlanView } from './_components/ActionPlanView'
+
+import type { SelectChangeEvent } from '@mui/material'
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 
 // NOTE: DataGrid周りは共通化してもいいかも
@@ -87,24 +87,29 @@ const columns: GridColDef[] = [
 
 export default function RetrospectiveAnswerDetail() {
   const { id: retrospectiveId } = useParams() as { id: string }
-  const { data, isLoading } = useRetrospective({ retrospectiveId })
+  const { data, isLoading: isUnachievedWorkRuleLoading } = useRetrospective({
+    retrospectiveId,
+  })
   const { onSubmitActionPlan, isSubmitting } = useSetActionPlan({
     retrospectiveId,
   })
   const { showSnackbar } = useSnackbarContext()
-  const [actionPlan, setActionPlan] = useState<string>('')
-  const [selectedWorkRuleId, setSelectedWorkRuleId] = useState<
-    string | undefined
-  >(undefined)
+  const [actionPlanInput, setActionPlanInput] = useState<string>('')
+  const [targetWorkRuleId, setTargetWorkRuleId] = useState<string | undefined>(
+    undefined,
+  )
+  const { data: actionPlan, isLoading: isActionPlanLoading } = useActionPlan({
+    retrospectiveId,
+  })
 
   const onSubmit = async () => {
-    const selectedWorkRule = data?.unachievedRules.find(
-      (rule) => rule.id === selectedWorkRuleId,
+    const targetWorkRule = data?.unachievedRules.find(
+      (rule) => rule.id === targetWorkRuleId,
     )
-    if (!selectedWorkRule || !actionPlan) return
+    if (!targetWorkRule || !actionPlanInput) return
     await onSubmitActionPlan({
-      actionPlan,
-      selectedWorkRule,
+      actionPlan: actionPlanInput,
+      targetWorkRule,
     })
       .then(() => {
         showSnackbar?.('success', 'アクションプランを設定しました')
@@ -112,6 +117,14 @@ export default function RetrospectiveAnswerDetail() {
       .catch(() => {
         showSnackbar?.('error', 'アクションプランを設定できませんでした')
       })
+  }
+
+  const onChangeActionPlanInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setActionPlanInput(e.target.value as string)
+  }
+
+  const onChangeTargetWorkRule = (e: SelectChangeEvent<unknown>) => {
+    setTargetWorkRuleId(e.target.value as string)
   }
 
   return (
@@ -173,7 +186,7 @@ export default function RetrospectiveAnswerDetail() {
         </Grid>
         <Grid item>
           <DataGrid
-            loading={isLoading}
+            loading={isUnachievedWorkRuleLoading}
             columns={columns}
             rows={data?.unachievedRules ?? []}
             hideFooter
@@ -190,65 +203,22 @@ export default function RetrospectiveAnswerDetail() {
             アクションプラン
           </Typography>
         </Grid>
-        <Grid
-          item
-          direction='row'
-          container
-          justifyContent='space-between'
-          width='960px'
-          columnSpacing={4}
-        >
-          <Grid item sm={6}>
-            <FormControl fullWidth>
-              <InputLabel required>
-                今週必ず達成するワークルールを選択してください
-              </InputLabel>
-              <Select
-                style={{
-                  width: '100%',
-                }}
-                value={selectedWorkRuleId}
-                onChange={(e) =>
-                  setSelectedWorkRuleId(e.target.value as string)
-                }
-                label='今週必ず達成するワークルールを選択してください'
-              >
-                {data?.unachievedRules.map((rule) => (
-                  <MenuItem value={rule.id} key={rule.id}>
-                    {rule.title}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item sm={6}>
-            <FormControl fullWidth>
-              <TextField
-                multiline
-                maxRows={10}
-                minRows={5}
-                fullWidth
-                label='今週実施するアクションプランを決めましょう'
-                required
-                value={actionPlan}
-                onChange={(e) => setActionPlan(e.target.value)}
-              />
-            </FormControl>
-            <Box mt={1} width='100%' display='flex' justifyContent='end'>
-              <LoadingButton
-                variant='contained'
-                style={{
-                  marginLeft: 'auto',
-                }}
-                onClick={onSubmit}
-                disabled={!selectedWorkRuleId || !actionPlan}
-                loading={isSubmitting}
-              >
-                送信
-              </LoadingButton>
-            </Box>
-          </Grid>
-        </Grid>
+        {isActionPlanLoading ? (
+          <Box width='960px' display='flex' justifyContent='center'>
+            <CircularProgress />
+          </Box>
+        ) : actionPlan ? (
+          <ActionPlanView actionPlan={actionPlan} />
+        ) : (
+          <ActionPlanForm
+            input={{ targetWorkRuleId, actionPlanInput }}
+            targetWorkRuleOptions={data?.unachievedRules ?? []}
+            onSubmit={onSubmit}
+            isSubmitting={isSubmitting}
+            onChangeActionPlanInput={onChangeActionPlanInput}
+            onChangeTargetWorkRule={onChangeTargetWorkRule}
+          />
+        )}
       </Grid>
       <Grid
         item
