@@ -12,6 +12,7 @@
   "plugins": ["unused-imports"],
   "rules": {
     "semi": "off",
+    "unused-imports/no-unused-imports": "error",
     "eslint-plugin-import/extensions": [
       "off",
       "never",
