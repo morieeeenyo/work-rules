@@ -7,6 +7,8 @@ import { generateResponseWithRelatedPage } from '../../../_utils/notion'
 
 import type { WorkRule } from '@/app/workrules/types'
 
+// NOTE: actionPlan - retrospectiveの関係は1対1なので、actionPlanのidを指定せずretrospectiveのidから参照させる
+// 結果としてpages.retrieveではなくdatabases.queryを使うことになった
 export async function GET(
   _request: Request,
   { params }: { params: { id: string } },
@@ -26,8 +28,10 @@ export async function GET(
     if (response.results.length === 0)
       return NextResponse.json(response.results[0])
 
-    // NOTE: 一つの振り返りに対して一つしかアクションプランは設定させないので、0番目に対してのみ判定する
-    if (response.results[0].object !== 'page') throw new Error('Not a page')
+    // NOTE: 一つの振り返りに対して一つしかアクションプランは設定させないので、0番目をレスポンスとして扱う
+    // 型ガード的にこのif文は必要
+    if (response.results[0].object !== 'page')
+      throw new Error('Unexpected response object type')
 
     const convertedResponse = await generateResponseWithRelatedPage(
       response.results[0],
