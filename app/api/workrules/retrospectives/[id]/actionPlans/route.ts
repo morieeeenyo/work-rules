@@ -5,6 +5,28 @@ import { notionClient } from '@/lib/notionClient'
 
 import type { WorkRule } from '@/app/workrules/types'
 
+export async function GET(
+  _request: Request,
+  { params }: { params: { id: string } },
+) {
+  const { id } = params
+  try {
+    const response = await notionClient.databases.query({
+      database_id: process.env.NOTION_ACTION_PLANS_DATABASE_ID ?? '',
+      filter: {
+        property: 'ワークルール振り返り',
+        relation: {
+          contains: id,
+        },
+      },
+    })
+
+    return NextResponse.json(response)
+  } catch (err) {
+    return NextResponse.json(err)
+  }
+}
+
 export type SetActionPlanParams = {
   actionPlan: string
   selectedWorkRule: WorkRule
