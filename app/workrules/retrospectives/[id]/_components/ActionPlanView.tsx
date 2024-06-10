@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material'
+import { Card, Grid, Typography } from '@mui/material'
 
 import type { ActionPlan } from '@/app/workrules/types'
 
@@ -17,14 +17,28 @@ export const ActionPlanView = ({ actionPlan }: Props) => {
       columnSpacing={4}
     >
       <Grid item sm={6}>
-        <Typography variant='subtitle2'>
-          今週必ず達成するワークルール
-        </Typography>
-        <Typography variant='subtitle2'>{actionPlan.targetWorkRule}</Typography>
+        <Card
+          style={{
+            padding: '12px 8px',
+          }}
+        >
+          <Typography variant='subtitle1'>
+            今週必ず達成するワークルール
+          </Typography>
+          <Typography variant='subtitle2'>
+            {actionPlan.targetWorkRule}
+          </Typography>
+        </Card>
       </Grid>
       <Grid item sm={6}>
-        <Typography variant='subtitle2'>アクションプラン</Typography>
-        <Typography variant='subtitle2'>{actionPlan.actionPlan}</Typography>
+        <Card
+          style={{
+            padding: '12px 8px',
+          }}
+        >
+          <Typography variant='subtitle1'>アクションプラン</Typography>
+          <Typography variant='subtitle2'>{actionPlan.actionPlan}</Typography>
+        </Card>
       </Grid>
     </Grid>
   )
