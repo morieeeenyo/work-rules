@@ -1,9 +1,31 @@
 import dayjs from 'dayjs'
 import { NextResponse } from 'next/server'
 
+import { getRelatedPage } from '@/app/utils/notion'
 import { notionClient } from '@/lib/notionClient'
 
 import type { WorkRule } from '@/app/workrules/types'
+import type { GetPageResponse } from '@notionhq/client/build/src/api-endpoints'
+
+const generateResponseWithRelatedWorkRulePage = async (
+  response: GetPageResponse,
+) => {
+  if (!('properties' in response)) return response
+  const unachievedRulesProperty =
+    response.properties['今週達成するワークルール']
+  const unachievedRules = await getRelatedPage(unachievedRulesProperty)
+
+  return {
+    ...response,
+    properties: {
+      ...response.properties,
+      今週達成するワークルール: {
+        type: 'relation',
+        relation: unachievedRules,
+      },
+    },
+  }
+}
 
 export async function GET(
   _request: Request,
@@ -21,7 +43,17 @@ export async function GET(
       },
     })
 
-    return NextResponse.json(response)
+    if (response.results.length === 0)
+      return NextResponse.json(response.results[0])
+
+    // NOTE: 一つの振り返りに対して一つしかアクションプランは設定させないので、0番目に対してのみ判定する
+    if (response.results[0].object !== 'page') throw new Error('Not a page')
+
+    const convertedResponse = await generateResponseWithRelatedWorkRulePage(
+      response.results[0],
+    )
+
+    return NextResponse.json(convertedResponse)
   } catch (err) {
     return NextResponse.json(err)
   }
