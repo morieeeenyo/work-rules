@@ -45,7 +45,5 @@ export const useActionPlan = ({ retrospectiveId }: Args) => {
     },
   )
 
-  console.log(data)
-
   return { data, isLoading }
 }
