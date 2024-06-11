@@ -15,6 +15,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid'
 import { useParams } from 'next/navigation'
 
+import { BackLink } from '@/app/_components/BackLink'
 import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
 
 import { COLOR_WITH_CATEGORY } from '../../constants/color'
@@ -138,11 +139,12 @@ export default function RetrospectiveAnswerDetail() {
       spacing={4}
     >
       <Grid item container justifyContent='space-between' width='960px'>
-        <Grid item>
-          <Typography variant='h4' fontWeight='bold'>
+        <Box display='flex' justifyContent='space-between'>
+          <BackLink href='/workrules/retrospectives' />
+          <Typography variant='h4' fontWeight='bold' ml='1rem'>
             回答結果詳細
           </Typography>
-        </Grid>
+        </Box>
       </Grid>
       <Grid
         item
