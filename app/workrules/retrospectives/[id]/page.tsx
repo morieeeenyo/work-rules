@@ -23,6 +23,7 @@ import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
 
 import { COLOR_WITH_CATEGORY } from '../../constants/color'
 import { useActionPlan } from '../../hooks/useActionPlan'
+import { useCreateActionPlanRetrospective } from '../../hooks/useCreateActionPlanRetrospective'
 import { useRetrospective } from '../../hooks/useRetrospective'
 import { useSetActionPlan } from '../../hooks/useSetActionPlan'
 
@@ -99,11 +100,20 @@ export default function RetrospectiveAnswerDetail() {
   })
   const { showSnackbar } = useSnackbarContext()
   const [actionPlanInput, setActionPlanInput] = useState<string>('')
+  const [actionPlanRetrospectiveInput, setActionPlanRetrospectiveInput] =
+    useState<string>('')
   const [targetWorkRuleId, setTargetWorkRuleId] = useState<string | undefined>(
     undefined,
   )
   const { data: actionPlan, isLoading: isActionPlanLoading } = useActionPlan({
     retrospectiveId,
+  })
+  const {
+    onSubmitActionPlanRetrospective,
+    isSubmitting: isSubmittingRetrospective,
+  } = useCreateActionPlanRetrospective({
+    retrospectiveId,
+    actionPlanId: actionPlan?.id ?? '',
   })
 
   const onSubmit = async () => {
@@ -123,12 +133,30 @@ export default function RetrospectiveAnswerDetail() {
       })
   }
 
+  const onSubmitRetrospective = async () => {
+    await onSubmitActionPlanRetrospective({
+      retrospective: actionPlanRetrospectiveInput,
+    })
+      .then(() => {
+        showSnackbar?.('success', '振り返りを保存しました')
+      })
+      .catch(() => {
+        showSnackbar?.('error', '振り返りを保存できませんでした')
+      })
+  }
+
   const onChangeActionPlanInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setActionPlanInput(e.target.value as string)
   }
 
   const onChangeTargetWorkRule = (e: SelectChangeEvent<unknown>) => {
     setTargetWorkRuleId(e.target.value as string)
+  }
+
+  const onChangeActionPlanRetrospectiveInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setActionPlanRetrospectiveInput(e.target.value as string)
   }
 
   return (
@@ -241,8 +269,8 @@ export default function RetrospectiveAnswerDetail() {
                 fullWidth
                 label='アクションプランを実施できたか振り返りましょう'
                 required
-                value={actionPlanInput}
-                onChange={onChangeActionPlanInput}
+                value={actionPlanRetrospectiveInput}
+                onChange={onChangeActionPlanRetrospectiveInput}
               />
             </FormControl>
             <Box mt={1} width='100%' display='flex' justifyContent='end'>
@@ -251,9 +279,9 @@ export default function RetrospectiveAnswerDetail() {
                 style={{
                   marginLeft: 'auto',
                 }}
-                onClick={onSubmit}
-                disabled={!targetWorkRuleId || !actionPlanInput}
-                loading={isSubmitting}
+                onClick={onSubmitRetrospective}
+                disabled={!actionPlanRetrospectiveInput}
+                loading={isSubmittingRetrospective}
               >
                 送信
               </LoadingButton>
