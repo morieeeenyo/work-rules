@@ -1,8 +1,10 @@
 'use client'
 
 import { Navigation } from '@mui/icons-material'
-import { Button, Fab, Grid, Typography, styled } from '@mui/material'
+import { Box, Button, Fab, Grid, Typography, styled } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
+
+import { BackLink } from '@/app/_components/BackLink'
 
 import { useRetrospectives } from '../hooks/useRetrospectives'
 
@@ -91,11 +93,12 @@ export default function RetrospectiveAnswerList() {
       spacing={4}
     >
       <Grid item container justifyContent='space-between' width='960px'>
-        <Grid item>
-          <Typography variant='h4' fontWeight='bold'>
+        <Box display='flex' justifyContent='space-between'>
+          <BackLink href='/' />
+          <Typography variant='h4' fontWeight='bold' ml='1rem'>
             回答結果一覧
           </Typography>
-        </Grid>
+        </Box>
       </Grid>
       <Grid item>
         <DataGrid

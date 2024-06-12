@@ -4,10 +4,11 @@ import { useState } from 'react'
 
 import { Navigation } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
+import { Box, Chip, Fab, Grid, Tooltip, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { useRouter } from 'next/navigation'
 
+import { BackLink } from '@/app/_components/BackLink'
 import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
 
 import { COLOR_WITH_CATEGORY } from '../constants/color'
@@ -106,9 +107,12 @@ export default function New() {
     >
       <Grid item container justifyContent='space-between' width='960px'>
         <Grid item>
-          <Typography variant='h4' fontWeight='bold'>
-            回答する
-          </Typography>
+          <Box display='flex' justifyContent='space-between'>
+            <BackLink href='/' />
+            <Typography variant='h4' fontWeight='bold' ml='1rem'>
+              回答する
+            </Typography>
+          </Box>
         </Grid>
         <Grid item>
           <LoadingButton
