@@ -3,12 +3,15 @@
 import { useState } from 'react'
 
 import { Navigation } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
   Chip,
   CircularProgress,
   Fab,
+  FormControl,
   Grid,
+  TextField,
   Tooltip,
   Typography,
 } from '@mui/material'
@@ -222,6 +225,42 @@ export default function RetrospectiveAnswerDetail() {
           />
         )}
       </Grid>
+      {actionPlan && (
+        <Grid item container width='960px'>
+          <Grid item>
+            <Typography variant='subtitle1' gutterBottom>
+              振り返り
+            </Typography>
+          </Grid>
+          <Grid item direction='row' container justifyContent='space-between'>
+            <FormControl fullWidth>
+              <TextField
+                multiline
+                maxRows={10}
+                minRows={5}
+                fullWidth
+                label='アクションプランを実施できたか振り返りましょう'
+                required
+                value={actionPlanInput}
+                onChange={onChangeActionPlanInput}
+              />
+            </FormControl>
+            <Box mt={1} width='100%' display='flex' justifyContent='end'>
+              <LoadingButton
+                variant='contained'
+                style={{
+                  marginLeft: 'auto',
+                }}
+                onClick={onSubmit}
+                disabled={!targetWorkRuleId || !actionPlanInput}
+                loading={isSubmitting}
+              >
+                送信
+              </LoadingButton>
+            </Box>
+          </Grid>
+        </Grid>
+      )}
       <Grid
         item
         container
