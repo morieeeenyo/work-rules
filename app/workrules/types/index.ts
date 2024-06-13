@@ -30,4 +30,5 @@ export type ActionPlan = {
   id: string
   targetWorkRule: string
   actionPlan: string
+  retrospective: string
 }
