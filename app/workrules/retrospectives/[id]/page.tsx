@@ -3,12 +3,15 @@
 import { useState } from 'react'
 
 import { Navigation } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
   Chip,
   CircularProgress,
   Fab,
+  FormControl,
   Grid,
+  TextField,
   Tooltip,
   Typography,
 } from '@mui/material'
@@ -20,6 +23,7 @@ import { useSnackbarContext } from '@/app/providers/SnackBarProvider'
 
 import { COLOR_WITH_CATEGORY } from '../../constants/color'
 import { useActionPlan } from '../../hooks/useActionPlan'
+import { useCreateActionPlanRetrospective } from '../../hooks/useCreateActionPlanRetrospective'
 import { useRetrospective } from '../../hooks/useRetrospective'
 import { useSetActionPlan } from '../../hooks/useSetActionPlan'
 
@@ -96,11 +100,20 @@ export default function RetrospectiveAnswerDetail() {
   })
   const { showSnackbar } = useSnackbarContext()
   const [actionPlanInput, setActionPlanInput] = useState<string>('')
+  const [actionPlanRetrospectiveInput, setActionPlanRetrospectiveInput] =
+    useState<string>('')
   const [targetWorkRuleId, setTargetWorkRuleId] = useState<string | undefined>(
     undefined,
   )
   const { data: actionPlan, isLoading: isActionPlanLoading } = useActionPlan({
     retrospectiveId,
+  })
+  const {
+    onSubmitActionPlanRetrospective,
+    isSubmitting: isSubmittingRetrospective,
+  } = useCreateActionPlanRetrospective({
+    retrospectiveId,
+    actionPlanId: actionPlan?.id ?? '',
   })
 
   const onSubmit = async () => {
@@ -120,12 +133,30 @@ export default function RetrospectiveAnswerDetail() {
       })
   }
 
+  const onSubmitRetrospective = async () => {
+    await onSubmitActionPlanRetrospective({
+      retrospective: actionPlanRetrospectiveInput,
+    })
+      .then(() => {
+        showSnackbar?.('success', '振り返りを保存しました')
+      })
+      .catch(() => {
+        showSnackbar?.('error', '振り返りを保存できませんでした')
+      })
+  }
+
   const onChangeActionPlanInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setActionPlanInput(e.target.value as string)
   }
 
   const onChangeTargetWorkRule = (e: SelectChangeEvent<unknown>) => {
     setTargetWorkRuleId(e.target.value as string)
+  }
+
+  const onChangeActionPlanRetrospectiveInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setActionPlanRetrospectiveInput(e.target.value as string)
   }
 
   return (
@@ -222,6 +253,42 @@ export default function RetrospectiveAnswerDetail() {
           />
         )}
       </Grid>
+      {actionPlan && (
+        <Grid item container width='960px'>
+          <Grid item>
+            <Typography variant='subtitle1' gutterBottom>
+              振り返り
+            </Typography>
+          </Grid>
+          <Grid item direction='row' container justifyContent='space-between'>
+            <FormControl fullWidth>
+              <TextField
+                multiline
+                maxRows={10}
+                minRows={5}
+                fullWidth
+                label='アクションプランを実施できたか振り返りましょう'
+                required
+                value={actionPlanRetrospectiveInput}
+                onChange={onChangeActionPlanRetrospectiveInput}
+              />
+            </FormControl>
+            <Box mt={1} width='100%' display='flex' justifyContent='end'>
+              <LoadingButton
+                variant='contained'
+                style={{
+                  marginLeft: 'auto',
+                }}
+                onClick={onSubmitRetrospective}
+                disabled={!actionPlanRetrospectiveInput}
+                loading={isSubmittingRetrospective}
+              >
+                送信
+              </LoadingButton>
+            </Box>
+          </Grid>
+        </Grid>
+      )}
       <Grid
         item
         container
