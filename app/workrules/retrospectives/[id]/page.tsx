@@ -6,6 +6,7 @@ import { Navigation } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import {
   Box,
+  Card,
   Chip,
   CircularProgress,
   Fab,
@@ -260,33 +261,48 @@ export default function RetrospectiveAnswerDetail() {
               振り返り
             </Typography>
           </Grid>
-          <Grid item direction='row' container justifyContent='space-between'>
-            <FormControl fullWidth>
-              <TextField
-                multiline
-                maxRows={10}
-                minRows={5}
-                fullWidth
-                label='アクションプランを実施できたか振り返りましょう'
-                required
-                value={actionPlanRetrospectiveInput}
-                onChange={onChangeActionPlanRetrospectiveInput}
-              />
-            </FormControl>
-            <Box mt={1} width='100%' display='flex' justifyContent='end'>
-              <LoadingButton
-                variant='contained'
+          {actionPlan.retrospective ? (
+            <Grid item xs={12}>
+              <Card
                 style={{
-                  marginLeft: 'auto',
+                  padding: '12px 8px',
+                  minHeight: '7rem',
                 }}
-                onClick={onSubmitRetrospective}
-                disabled={!actionPlanRetrospectiveInput}
-                loading={isSubmittingRetrospective}
               >
-                送信
-              </LoadingButton>
-            </Box>
-          </Grid>
+                <Typography variant='subtitle2'>
+                  {actionPlan.retrospective}
+                </Typography>
+              </Card>
+            </Grid>
+          ) : (
+            <Grid item direction='row' container justifyContent='space-between'>
+              <FormControl fullWidth>
+                <TextField
+                  multiline
+                  maxRows={10}
+                  minRows={5}
+                  fullWidth
+                  label='アクションプランを実施できたか振り返りましょう'
+                  required
+                  value={actionPlanRetrospectiveInput}
+                  onChange={onChangeActionPlanRetrospectiveInput}
+                />
+              </FormControl>
+              <Box mt={1} width='100%' display='flex' justifyContent='end'>
+                <LoadingButton
+                  variant='contained'
+                  style={{
+                    marginLeft: 'auto',
+                  }}
+                  onClick={onSubmitRetrospective}
+                  disabled={!actionPlanRetrospectiveInput}
+                  loading={isSubmittingRetrospective}
+                >
+                  送信
+                </LoadingButton>
+              </Box>
+            </Grid>
+          )}
         </Grid>
       )}
       <Grid

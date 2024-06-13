@@ -24,6 +24,7 @@ export const useActionPlan = ({ retrospectiveId }: Args) => {
       const targetWorkRuleProperty = properties[
         '今週達成するワークルール'
       ] as RelationPropertyWithDetail
+      const retrospectiveProperty = properties['振り返り']
 
       if (!actionPlanProperty || !targetWorkRuleProperty) return null
 
@@ -40,6 +41,10 @@ export const useActionPlan = ({ retrospectiveId }: Args) => {
         actionPlan:
           actionPlanProperty.type === 'rich_text'
             ? actionPlanProperty.rich_text[0].plain_text
+            : '',
+        retrospective:
+          retrospectiveProperty.type === 'rich_text'
+            ? retrospectiveProperty.rich_text[0].plain_text
             : '',
       }
     },
